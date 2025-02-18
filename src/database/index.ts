@@ -6,6 +6,8 @@ export default class Database {
   private client: Knex;
   private logger: Logger;
 
+  private static instance: Database;
+
   constructor(config: Knex.Config) {
     this.client = knex(config);
     this.knexQuery = this.client.select();
@@ -16,16 +18,21 @@ export default class Database {
     });
   }
 
-  select(...args: string[]) {
-    this.knexQuery.select(...args);
+  static getInstance(config: Knex.Config) {
+    if (!this.instance) {
+      this.instance = new Database(config);
+    }
+    return this.instance;
+  }
 
-    return this;
+  select(...args: string[]) {
+    this.knexQuery = this.knexQuery.select(...args);
+    return this.knexQuery;
   }
 
   from(table: string) {
-    this.knexQuery.from(table);
-
-    return this;
+    this.knexQuery = this.knexQuery.from(table);
+    return this.knexQuery;
   }
 
   toSQL(): Knex.Sql {
@@ -38,10 +45,6 @@ export default class Database {
 
   toQuery(): string {
     return this.knexQuery.toQuery();
-  }
-
-  async exec() {
-    return this.knexQuery;
   }
 
   async disconnect() {
