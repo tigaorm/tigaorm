@@ -62,8 +62,8 @@ WIP
 - [x] Connect to PostgreSQL DB
 - [ ] Basic Query Builder
 	- [ ] raw
-	- [ ] select
-	- [ ] from
+	- [x] select
+	- [x] from
 	- [ ] where
 		- [ ] andWhere
 		- [ ] orWhere
