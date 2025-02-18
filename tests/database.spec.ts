@@ -52,6 +52,112 @@ test.group('Database', () => {
     await db.disconnect();
   });
 
+  test('where method should add a where clause', async ({ expect }) => {
+    const db = new Database(MOCK_CONFIG);
+
+    const tigaSql = db.select('*').from('users').where('id', '=', 1).toQuery();
+    const knexSql = db.getClient()!.select('*').from('users').where('id', '=', 1).toQuery();
+
+    expect(tigaSql).toBe(knexSql);
+
+    await db.disconnect();
+  });
+
+  test('andWhere method should add an and where clause', async ({ expect }) => {
+    const db = new Database(MOCK_CONFIG);
+
+    const tigaSql = db
+      .select('*')
+      .from('users')
+      .where('id', '=', 1)
+      .andWhere('name', '=', 'emirhan')
+      .toQuery();
+    const knexSql = db
+      .getClient()!
+      .select('*')
+      .from('users')
+      .where('id', '=', 1)
+      .andWhere('name', '=', 'emirhan')
+      .toQuery();
+
+    expect(tigaSql).toBe(knexSql);
+
+    await db.disconnect();
+  });
+
+  test('orWhere method should add an or where clause', async ({ expect }) => {
+    const db = new Database(MOCK_CONFIG);
+
+    const tigaSql = db
+      .select('*')
+      .from('users')
+      .where('id', '=', 1)
+      .andWhere('name', '=', 'emirhan')
+      .orWhere('email', '=', 'emirhan@meown.app')
+      .toQuery();
+    const knexSql = db
+      .getClient()!
+      .select('*')
+      .from('users')
+      .where('id', '=', 1)
+      .andWhere('name', '=', 'emirhan')
+      .orWhere('email', '=', 'emirhan@meown.app')
+      .toQuery();
+
+    expect(tigaSql).toBe(knexSql);
+
+    await db.disconnect();
+  });
+
+  test('toSQL method should return SQL object', async ({ expect }) => {
+    const db = new Database(MOCK_CONFIG);
+
+    const tigaSql = db
+      .select('*')
+      .from('users')
+      .where('id', '=', 1)
+      .andWhere('name', '=', 'emirhan')
+      .orWhere('email', '=', 'emirhan@meown.app')
+      .toSQL();
+    const knexSql = db
+      .getClient()!
+      .select('*')
+      .from('users')
+      .where('id', '=', 1)
+      .andWhere('name', '=', 'emirhan')
+      .orWhere('email', '=', 'emirhan@meown.app')
+      .toSQL();
+
+    expect(tigaSql.sql).toEqual(knexSql.sql);
+
+    await db.disconnect();
+  });
+
+  test('toNative method should return native SQL object', async ({ expect }) => {
+    const db = new Database(MOCK_CONFIG);
+
+    const tigaSql = db
+      .select('*')
+      .from('users')
+      .where('id', '=', 1)
+      .andWhere('name', '=', 'emirhan')
+      .orWhere('email', '=', 'emirhan@meown.app')
+      .toNative();
+    const knexSql = db
+      .getClient()!
+      .select('*')
+      .from('users')
+      .where('id', '=', 1)
+      .andWhere('name', '=', 'emirhan')
+      .orWhere('email', '=', 'emirhan@meown.app')
+      .toSQL()
+      .toNative();
+
+    expect(tigaSql.sql).toEqual(knexSql.sql);
+
+    await db.disconnect();
+  });
+
   test('should disconnect from database', async ({ expect }) => {
     const db = new Database(MOCK_CONFIG);
 

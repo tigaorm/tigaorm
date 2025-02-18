@@ -1,12 +1,15 @@
 import knex, { type Knex } from 'knex';
 import pino, { Logger } from 'pino';
+import QueryBuilder from './query_builder.js';
 
 export default class Database {
   private knexQuery: Knex.QueryBuilder | null = null;
   private client: Knex | null;
   private logger: Logger;
+  private config: Knex.Config;
 
   constructor(config: Knex.Config) {
+    this.config = config;
     this.client = knex(config);
     this.logger = pino.default({
       transport: {
@@ -46,7 +49,7 @@ export default class Database {
     this.knexQuery = this.getClient()!
       .queryBuilder()
       .select(...args);
-    return this;
+    return new QueryBuilder(this.knexQuery);
   }
 
   from(table: string) {
@@ -54,7 +57,7 @@ export default class Database {
       this.knexQuery = this.getClient()!.queryBuilder().select('*');
     }
     this.knexQuery = this.knexQuery.from(table);
-    return this;
+    return new QueryBuilder(this.knexQuery);
   }
 
   toSQL(): Knex.Sql {

@@ -27,11 +27,16 @@ const db = new Database({
 });
 
 // Build and execute queries
-const query = db.select('id', 'name').from('users');
+const query = db
+  .select('id', 'name')
+  .from('users')
+  .where('name', '=', 'John')
+  .andWhere('age', '>', 25)
+  .orWhere('city', '=', 'New York');
 
 // Get the raw SQL
 console.log(query.toQuery());
-// Output: select "id", "name" from "users"
+// Output: select "id", "name" from "users" where "name" = ? and "age" > ? or "city" = ?
 
 // Execute the query
 const results = await query.exec();
@@ -88,6 +93,12 @@ yarn run test:watch
 
 - [x] select - Select specific columns from a table
 - [x] from - Specify the table to query from
+- [x] where - Add a where clause to the query
+- [x] andWhere - Add an and where clause to the query
+- [x] orWhere - Add an or where clause to the query
+- [x] whereNot - Add a where not clause to the query
+- [x] orWhereNot - Add an or where not clause to the query
+- [x] andWhereNot - Add an and where not clause to the query
 - [x] toSQL - Get the SQL representation of the query
 - [x] toNative - Get the native SQL representation with bindings
 - [x] toQuery - Get the formatted SQL query string
@@ -99,131 +110,131 @@ yarn run test:watch
 - [x] Setup a NodeJS library infra
 - [x] Connect to PostgreSQL DB
 - [ ] Basic Query Builder
-	- [ ] raw
-	- [x] select
-	- [x] from
-	- [ ] where
-		- [ ] andWhere
-		- [ ] orWhere
-		- [ ] whereNot
-		- [ ] orWhereNot
-		- [ ] andWhereNot
-	- [ ] orderBy
-	- [ ] offset
-	- [ ] limit
-	- [ ] forPage
-	- [ ] count
-		- [ ] min
-		- [ ] max
-		- [ ] sum
-		- [ ] avg
-	- [ ] insert
-	- [ ] bulkInsert
-	- [ ] returning
-	- [ ] update
-	- [ ] delete
-	- [ ] debug
-	- [x] toSQL
-	- [x] toNative
-	- [x] toQuery
-	- [ ] first
-	- [ ] firstOrFail
+  - [ ] raw
+  - [x] select
+  - [x] from
+  - [x] where
+    - [x] andWhere
+    - [x] orWhere
+    - [x] whereNot
+    - [x] orWhereNot
+    - [x] andWhereNot
+  - [ ] orderBy
+  - [ ] offset
+  - [ ] limit
+  - [ ] forPage
+  - [ ] count
+    - [ ] min
+    - [ ] max
+    - [ ] sum
+    - [ ] avg
+  - [ ] insert
+  - [ ] bulkInsert
+  - [ ] returning
+  - [ ] update
+  - [ ] delete
+  - [ ] debug
+  - [x] toSQL
+  - [x] toNative
+  - [x] toQuery
+  - [ ] first
+  - [ ] firstOrFail
 - [x] Add tests using Japa
 
 ## v0.2
 - [ ] Improve Query Builder
-	- [ ] whereLike
-	- [ ] whereILike
-	- [ ] whereIn
-		- [ ] andWhereIn
-		- [ ] orWhereIn
-		- [ ] whereNotIn
-		- [ ] orWhereNotIn
-		- [ ] andWhereNotIn
-	- [ ] whereNull
-		- [ ] andWhereNull
-		- [ ] orWhereNull
-		- [ ] whereNotNull
-		- [ ] orWhereNotNull
-		- [ ] andWhereNotNull
-	- [ ] whereExists
-		- [ ] andWhereExists
-		- [ ] orWhereExists
-		- [ ] whereNotExists
-		- [ ] orWhereNotExists
-		- [ ] andWhereNotExists
-	- [ ] whereBetween
-		- [ ] andWhereBetween
-		- [ ] orWhereBetween
-		- [ ] whereNotBetween
-		- [ ] orWhereNotBetween
-		- [ ] andWhereNotBetween
-	- [ ] orderByRaw
-	- [ ] distinct
-	- [ ] distinctOn
-	- [ ] groupBy
-	- [ ] groupByRaw
-	- [ ] count
-		- [ ] countDistinct
-		- [ ] sumDistinct
-		- [ ] avgDistinct
-	- [ ] increment
-	- [ ] decrement
+  - [ ] whereLike
+  - [ ] whereILike
+  - [ ] whereIn
+    - [ ] andWhereIn
+    - [ ] orWhereIn
+    - [ ] whereNotIn
+    - [ ] orWhereNotIn
+    - [ ] andWhereNotIn
+  - [ ] whereNull
+    - [ ] andWhereNull
+    - [ ] orWhereNull
+    - [ ] whereNotNull
+    - [ ] orWhereNotNull
+    - [ ] andWhereNotNull
+  - [ ] whereExists
+    - [ ] andWhereExists
+    - [ ] orWhereExists
+    - [ ] whereNotExists
+    - [ ] orWhereNotExists
+    - [ ] andWhereNotExists
+  - [ ] whereBetween
+    - [ ] andWhereBetween
+    - [ ] orWhereBetween
+    - [ ] whereNotBetween
+    - [ ] orWhereNotBetween
+    - [ ] andWhereNotBetween
+  - [ ] orderByRaw
+  - [ ] distinct
+  - [ ] distinctOn
+  - [ ] groupBy
+  - [ ] groupByRaw
+  - [ ] count
+    - [ ] countDistinct
+    - [ ] sumDistinct
+    - [ ] avgDistinct
+  - [ ] increment
+  - [ ] decrement
 
 ## v0.3
 - [ ] Improve Query Builder
-	- [ ] join
-	- [ ] joinRaw
-	- [ ] onIn
-	- [ ] onNotIn
-	- [ ] onNull
-	- [ ] onNotNull
-	- [ ] onExists
-	- [ ] onNotExists
-	- [ ] onBetween
-	- [ ] onNotBetween
-	- [ ] having
-		- [ ] havingIn
-		- [ ] havingNotIn
-		- [ ] havingNull
-		- [ ] havingNotNull
-		- [ ] havingExists
-		- [ ] havingNotExists
-		- [ ] havingBetween
-		- [ ] havingNotBetween
-	- [ ] havingRaw
-	- [ ] whereRaw
-		- [ ] andWhereRaw
-		- [ ] orWhereRaw
-		- [ ] whereNotRaw
-		- [ ] orWhereNotRaw
-		- [ ] andWhereNotRaw
+  - [ ] join
+  - [ ] joinRaw
+  - [ ] onIn
+  - [ ] onNotIn
+  - [ ] onNull
+  - [ ] onNotNull
+  - [ ] onExists
+  - [ ] onNotExists
+  - [ ] onBetween
+  - [ ] onNotBetween
+  - [ ] having
+    - [ ] havingIn
+    - [ ] havingNotIn
+    - [ ] havingNull
+    - [ ] havingNotNull
+    - [ ] havingExists
+    - [ ] havingNotExists
+    - [ ] havingBetween
+    - [ ] havingNotBetween
+  - [ ] havingRaw
+  - [ ] whereRaw
+    - [ ] andWhereRaw
+    - [ ] orWhereRaw
+    - [ ] whereNotRaw
+    - [ ] orWhereNotRaw
+    - [ ] andWhereNotRaw
 
 ## v0.4
 - [ ] Improve Query Builder
-	- [ ] whereJson
-		- [ ] andWhereJson
-		- [ ] orWhereJson
-		- [ ] whereNotJson
-		- [ ] orWhereNotJson
-		- [ ] andWhereNotJson
-	- [ ] whereJsonSuperset
-		- [ ] andWhereJsonSuperset
-		- [ ] orWhereJsonSuperset
-		- [ ] whereNotJsonSuperset
-		- [ ] orWhereNotJsonSuperset
-		- [ ] andWhereNotJsonSuperset
-	- [ ] whereJsonSubset
-		- [ ] andWhereJsonSubset
-		- [ ] orWhereJsonSubset
-		- [ ] whereNotJsonSubset
-		- [ ] orWhereNotJsonSubset
-		- [ ] andWhereNotJsonSubset	
-	- [ ] union
-	- [ ] with
-	- [ ] withMaterialized
-	- [ ] withNotMaterialized
-	- [ ] withRecursive
-	- [ ] pagination
-	- [ ] clone
-	- [ ] timeout
+  - [ ] whereJson
+    - [ ] andWhereJson
+    - [ ] orWhereJson
+    - [ ] whereNotJson
+    - [ ] orWhereNotJson
+    - [ ] andWhereNotJson
+  - [ ] whereJsonSuperset
+    - [ ] andWhereJsonSuperset
+    - [ ] orWhereJsonSuperset
+    - [ ] whereNotJsonSuperset
+    - [ ] orWhereNotJsonSuperset
+    - [ ] andWhereNotJsonSuperset
+  - [ ] whereJsonSubset
+    - [ ] andWhereJsonSubset
+    - [ ] orWhereJsonSubset
+    - [ ] whereNotJsonSubset
+    - [ ] orWhereNotJsonSubset
+    - [ ] andWhereNotJsonSubset  
+  - [ ] union
+  - [ ] with
+  - [ ] withMaterialized
+  - [ ] withNotMaterialized
+  - [ ] withRecursive
+  - [ ] pagination
+  - [ ] clone
+  - [ ] timeout

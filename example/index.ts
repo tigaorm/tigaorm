@@ -11,11 +11,11 @@ const client = new Database({
   },
 });
 
-const query = client.select('id', 'name').from('users');
-const sql = query.toQuery();
+const result = await client
+  .select('id', 'name')
+  .from('users')
+  .where('name', '=', 'John')
+  .orWhereNot('id', '=', 2)
+  .toQuery();
 
-console.log(sql);
-
-// const result = await client.select('*').from('users').exec();
-
-// console.log(result);
+console.log(result);
