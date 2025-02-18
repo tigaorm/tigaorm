@@ -85,10 +85,10 @@ WIP
 	- [ ] update
 	- [ ] delete
 	- [ ] debug
-	- [ ] toSQL
-	- [ ] toNative
-	- [ ] toQuery
-	- [ ] exec
+	- [x] toSQL
+	- [x] toNative
+	- [x] toQuery
+	- [x] exec
 	- [ ] first
 	- [ ] firstOrFail
 - [ ] Add tests using Japa

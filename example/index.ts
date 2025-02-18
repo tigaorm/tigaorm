@@ -11,6 +11,6 @@ const client = new Database({
   },
 });
 
-const result = await client.select('*').from('users').toSQL();
+const result = await client.select('*').from('users').toQuery();
 
 console.log(result);

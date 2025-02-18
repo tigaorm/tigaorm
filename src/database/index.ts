@@ -28,12 +28,20 @@ export default class Database {
     return this;
   }
 
-  async execute() {
-    return this.knexQuery;
+  toSQL(): Knex.Sql {
+    return this.knexQuery.toSQL();
   }
 
-  toSQL(): string {
-    return this.knexQuery.toSQL().sql;
+  toNative(): Knex.SqlNative {
+    return this.knexQuery.toSQL().toNative();
+  }
+
+  toQuery(): string {
+    return this.knexQuery.toQuery();
+  }
+
+  async exec() {
+    return this.knexQuery;
   }
 
   async disconnect() {
