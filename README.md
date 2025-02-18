@@ -35,7 +35,7 @@ const query = db
   .orWhere('city', '=', 'New York');
 
 // Get the raw SQL
-console.log(query.toQuery());
+console.log(query.toSQL().sql);
 // Output: select "id", "name" from "users" where "name" = ? and "age" > ? or "city" = ?
 
 // Execute the query
