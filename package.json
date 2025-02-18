@@ -20,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "@japa/assert": "^4.0.1",
+    "@japa/expect": "^3.0.3",
     "@japa/file-system": "^2.3.2",
     "@japa/runner": "^4.2.0",
     "@types/node": "^20.11.19",

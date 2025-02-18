@@ -1,6 +1,6 @@
 import Database from '../src/database';
 
-const client = Database.getInstance({
+const client = new Database({
   client: 'pg',
   connection: {
     host: 'localhost',
@@ -11,6 +11,11 @@ const client = Database.getInstance({
   },
 });
 
-const result = await client.select('*').from('users');
+const query = client.select('id', 'name').from('users');
+const sql = query.toQuery();
 
-console.log(result);
+console.log(sql);
+
+// const result = await client.select('*').from('users').exec();
+
+// console.log(result);
