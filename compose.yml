@@ -1,0 +1,13 @@
+services:
+  pg:
+    image: postgres:16
+    container_name: pg
+    env_file: ./.env
+    environment:
+      - POSTGRES_DB=$PG_DATABASE
+      - POSTGRES_USER=$PG_USER
+      - POSTGRES_PASSWORD=$PG_PASSWORD
+    ports:
+      - $PG_PORT:5432
+    expose:
+      - $PG_PORT
