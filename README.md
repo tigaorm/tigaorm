@@ -27,10 +27,19 @@ The project uses [Japa](https://japa.dev/) for testing. You can run tests using:
 
 ```bash
 # Run tests once
+docker-compose up -d
 yarn test
 
 # Run tests in watch mode
+docker-compose up -d
 yarn run test:watch
+```
+
+## Example
+
+```bash
+docker-compose up -d
+npx tsx example/index.ts
 ```
 
 ## Available Scripts
@@ -50,7 +59,7 @@ WIP
 # Roadmap
 ## v0.1
 - [x] Setup a NodeJS library infra
-- [ ] Connect to PostgreSQL DB
+- [x] Connect to PostgreSQL DB
 - [ ] Basic Query Builder
 	- [ ] raw
 	- [ ] select
