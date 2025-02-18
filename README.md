@@ -1,6 +1,45 @@
 # Tiga ORM
 Tiga ORM is a TypeScript Active Record ORM that builds top of [Knex](https://knexjs.org/).
 
+## Features
+
+- Simple and intuitive query builder interface
+- Built on top of Knex.js for reliable database operations
+- Full TypeScript support
+- Built-in logging with Pino
+- PostgreSQL support
+
+## Example
+
+```typescript
+import Database from 'tigaorm';
+
+// Initialize the database connection
+const db = new Database({
+  client: 'pg',
+  connection: {
+    host: 'localhost',
+    port: 5432,
+    user: 'tigaorm',
+    password: 'tigaorm',
+    database: 'tigaorm',
+  },
+});
+
+// Build and execute queries
+const query = db.select('id', 'name').from('users');
+
+// Get the raw SQL
+console.log(query.toQuery());
+// Output: select "id", "name" from "users"
+
+// Execute the query
+const results = await query.exec();
+
+// Don't forget to disconnect when done
+await db.disconnect();
+```
+
 ## Development Setup
 
 1. Clone the repository:
@@ -35,13 +74,6 @@ docker-compose up -d
 yarn run test:watch
 ```
 
-## Example
-
-```bash
-docker-compose up -d
-npx tsx example/index.ts
-```
-
 ## Available Scripts
 
 - `yarn dev` - Starts TypeScript compiler in watch mode
@@ -52,8 +84,14 @@ npx tsx example/index.ts
 - `yarn test:watch` - Runs tests in watch mode
 - `yarn clean` - Cleans the build directory
 
-## Usage
-WIP
+## Current Query Builder Features
+
+- [x] select - Select specific columns from a table
+- [x] from - Specify the table to query from
+- [x] toSQL - Get the SQL representation of the query
+- [x] toNative - Get the native SQL representation with bindings
+- [x] toQuery - Get the formatted SQL query string
+- [x] exec - Execute the query and get results
 
 ---
 # Roadmap
@@ -90,7 +128,7 @@ WIP
 	- [x] toQuery
 	- [ ] first
 	- [ ] firstOrFail
-- [ ] Add tests using Japa
+- [x] Add tests using Japa
 
 ## v0.2
 - [ ] Improve Query Builder
