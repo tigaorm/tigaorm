@@ -1,5 +1,5 @@
 # Tiga ORM
-Tiga ORM is a TypeScript Active Record ORM that builds top of [Knex](https://knexjs.org/).
+Tiga ORM is a TypeScript Query Builder that builds top of [Knex](https://knexjs.org/).
 
 ## Features
 
