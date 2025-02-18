@@ -158,6 +158,26 @@ test.group('Database', () => {
     await db.disconnect();
   });
 
+  test('first method should return the first result', async ({ expect }) => {
+    const db = new Database(MOCK_CONFIG);
+
+    const result = await db.select('*').from('users').where('id', '=', 1).first();
+
+    expect(result).toBeDefined();
+
+    await db.disconnect();
+  });
+
+  test('firstOrFail method should throw an error if no result is found', async ({ expect }) => {
+    process.setMaxListeners(0);
+
+    const db = new Database(MOCK_CONFIG);
+
+    await expect(db.select('*').from('users').where('id', '=', 2).firstOrFail()).rejects.toThrow();
+
+    await db.disconnect();
+  });
+
   test('should disconnect from database', async ({ expect }) => {
     const db = new Database(MOCK_CONFIG);
 

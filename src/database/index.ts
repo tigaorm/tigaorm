@@ -1,6 +1,5 @@
 import knex, { type Knex } from 'knex';
 import pino, { Logger } from 'pino';
-import QueryBuilder from './query_builder.js';
 
 export default class Database {
   private knexQuery: Knex.QueryBuilder | null = null;
@@ -15,6 +14,12 @@ export default class Database {
       transport: {
         target: 'pino-pretty', // TODO: Remove this in production
       },
+    });
+
+    this.logger.info('Database connected');
+
+    this.client.on('query', (query) => {
+      this.logger.info(query.sql);
     });
   }
 
@@ -49,7 +54,7 @@ export default class Database {
     this.knexQuery = this.getClient()!
       .queryBuilder()
       .select(...args);
-    return new QueryBuilder(this.knexQuery);
+    return this;
   }
 
   from(table: string) {
@@ -57,7 +62,106 @@ export default class Database {
       this.knexQuery = this.getClient()!.queryBuilder().select('*');
     }
     this.knexQuery = this.knexQuery.from(table);
-    return new QueryBuilder(this.knexQuery);
+    return this;
+  }
+
+  private handleWhereClause(
+    method: 'where' | 'andWhere' | 'orWhere' | 'whereNot' | 'orWhereNot' | 'andWhereNot',
+    columnOrCallback: string | ((query: Knex.QueryBuilder) => void),
+    operator?: string,
+    value?: Knex.Value,
+  ) {
+    if (typeof columnOrCallback === 'function') {
+      this.knexQuery = this.getKnexQuery()![method]((qb) => {
+        columnOrCallback(qb);
+      });
+    } else if (operator && value !== undefined) {
+      this.knexQuery = this.getKnexQuery()![method](columnOrCallback as string, operator, value);
+    } else {
+      throw new Error(`Invalid arguments for ${method} clause`);
+    }
+    return this;
+  }
+
+  where(
+    columnOrCallback: string | ((query: Knex.QueryBuilder) => void),
+    operator?: string,
+    value?: Knex.Value,
+  ) {
+    return this.handleWhereClause('where', columnOrCallback, operator, value);
+  }
+
+  andWhere(
+    columnOrCallback: string | ((query: Knex.QueryBuilder) => void),
+    operator?: string,
+    value?: Knex.Value,
+  ) {
+    return this.handleWhereClause('andWhere', columnOrCallback, operator, value);
+  }
+
+  orWhere(
+    columnOrCallback: string | ((query: Knex.QueryBuilder) => void),
+    operator?: string,
+    value?: Knex.Value,
+  ) {
+    return this.handleWhereClause('orWhere', columnOrCallback, operator, value);
+  }
+
+  whereNot(
+    columnOrCallback: string | ((query: Knex.QueryBuilder) => void),
+    operator?: string,
+    value?: Knex.Value,
+  ) {
+    return this.handleWhereClause('whereNot', columnOrCallback, operator, value);
+  }
+
+  orWhereNot(
+    columnOrCallback: string | ((query: Knex.QueryBuilder) => void),
+    operator?: string,
+    value?: Knex.Value,
+  ) {
+    return this.handleWhereClause('orWhereNot', columnOrCallback, operator, value);
+  }
+
+  andWhereNot(
+    columnOrCallback: string | ((query: Knex.QueryBuilder) => void),
+    operator?: string,
+    value?: Knex.Value,
+  ) {
+    return this.handleWhereClause('andWhereNot', columnOrCallback, operator, value);
+  }
+
+  limit(value: number) {
+    if (!this.knexQuery) {
+      throw new Error('No query has been built yet. Call select() or from() first.');
+    }
+    this.knexQuery = this.knexQuery.limit(value);
+    return this;
+  }
+
+  offset(value: number) {
+    if (!this.knexQuery) {
+      throw new Error('No query has been built yet. Call select() or from() first.');
+    }
+    this.knexQuery = this.knexQuery.offset(value);
+    return this;
+  }
+
+  async first() {
+    if (!this.knexQuery) {
+      throw new Error('No query has been built yet. Call select() or from() first.');
+    }
+    this.knexQuery = this.knexQuery.limit(1);
+    const result = await this.exec();
+    return result[0] || null;
+  }
+
+  async firstOrFail() {
+    const result = await this.first();
+    if (!result) {
+      throw new Error('No result found');
+    }
+    return result;
   }
 
   toSQL(): Knex.Sql {

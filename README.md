@@ -39,7 +39,7 @@ console.log(query.toSQL().sql);
 // Output: select "id", "name" from "users" where "name" = ? and "age" > ? or "city" = ?
 
 // Execute the query
-const results = await query.exec();
+const results = await query.firstOrFail();
 
 // Don't forget to disconnect when done
 await db.disconnect();
@@ -99,6 +99,8 @@ yarn run test:watch
 - [x] whereNot - Add a where not clause to the query
 - [x] orWhereNot - Add an or where not clause to the query
 - [x] andWhereNot - Add an and where not clause to the query
+- [x] offset - Add an offset to the query
+- [x] limit - Add a limit to the query
 - [x] toSQL - Get the SQL representation of the query
 - [x] toNative - Get the native SQL representation with bindings
 - [x] toQuery - Get the formatted SQL query string
@@ -120,8 +122,8 @@ yarn run test:watch
     - [x] orWhereNot
     - [x] andWhereNot
   - [ ] orderBy
-  - [ ] offset
-  - [ ] limit
+  - [x] offset
+  - [x] limit
   - [ ] forPage
   - [ ] count
     - [ ] min
