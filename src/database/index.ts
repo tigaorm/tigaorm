@@ -147,17 +147,33 @@ export default class Database {
     return this;
   }
 
-  async first() {
+  orderBy(column: string, direction: 'asc' | 'desc' = 'asc') {
+    if (!this.knexQuery) {
+      throw new Error('No query has been built yet. Call select() or from() first.');
+    }
+    this.knexQuery = this.knexQuery.orderBy(column, direction);
+    return this;
+  }
+
+  forPage(page: number, perPage: number): this {
+    if (!this.knexQuery) {
+      throw new Error('No query has been built yet. Call select() or from() first.');
+    }
+    this.knexQuery = this.knexQuery.offset((page - 1) * perPage).limit(perPage);
+    return this;
+  }
+
+  async first<T = unknown>(): Promise<T | null> {
     if (!this.knexQuery) {
       throw new Error('No query has been built yet. Call select() or from() first.');
     }
     this.knexQuery = this.knexQuery.limit(1);
     const result = await this.exec();
-    return result[0] || null;
+    return (result[0] as T) || null;
   }
 
-  async firstOrFail() {
-    const result = await this.first();
+  async firstOrFail<T = unknown>(): Promise<T> {
+    const result = await this.first<T>();
     if (!result) {
       throw new Error('No result found');
     }
@@ -186,7 +202,7 @@ export default class Database {
   }
 
   // Query Execution
-  async exec() {
+  async exec<T = unknown>(): Promise<T[]> {
     if (!this.knexQuery) {
       throw new Error('No query has been built yet. Call select() or from() first.');
     }

@@ -30,13 +30,11 @@ const db = new Database({
 const query = db
   .select('id', 'name')
   .from('users')
-  .where('name', '=', 'John')
-  .andWhere('age', '>', 25)
-  .orWhere('city', '=', 'New York');
+  .orderBy('id', 'desc');
 
 // Get the raw SQL
 console.log(query.toSQL().sql);
-// Output: select "id", "name" from "users" where "name" = ? and "age" > ? or "city" = ?
+// Output: select "id", "name" from "users" order by "id" desc
 
 // Execute the query
 const results = await query.firstOrFail();
@@ -101,6 +99,8 @@ yarn run test:watch
 - [x] andWhereNot - Add an and where not clause to the query
 - [x] offset - Add an offset to the query
 - [x] limit - Add a limit to the query
+- [x] orderBy - Add an order by clause to the query
+- [x] forPage - Paginate the query results
 - [x] toSQL - Get the SQL representation of the query
 - [x] toNative - Get the native SQL representation with bindings
 - [x] toQuery - Get the formatted SQL query string
@@ -121,10 +121,10 @@ yarn run test:watch
     - [x] whereNot
     - [x] orWhereNot
     - [x] andWhereNot
-  - [ ] orderBy
+  - [x] orderBy
   - [x] offset
   - [x] limit
-  - [ ] forPage
+  - [x] forPage
   - [ ] count
     - [ ] min
     - [ ] max
