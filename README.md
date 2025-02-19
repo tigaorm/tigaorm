@@ -139,8 +139,8 @@ yarn run test:watch
   - [x] toSQL
   - [x] toNative
   - [x] toQuery
-  - [ ] first
-  - [ ] firstOrFail
+  - [x] first
+  - [x] firstOrFail
 - [x] Add tests using Japa
 
 ## v0.2
